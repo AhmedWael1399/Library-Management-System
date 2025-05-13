@@ -1,14 +1,21 @@
 using LibraryManagementSystem.DAL.Contexts;
 using Microsoft.EntityFrameworkCore;
+using LibraryManagementSystem.BLL.Interfaces;
+using LibraryManagementSystem.BLL.Repositories;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 
 namespace LibraryManagementSystem
 {
+
     public class Program
     {
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
+         
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<LibraryManagementSystemDbContext>(options =>
@@ -16,6 +23,12 @@ namespace LibraryManagementSystem
                     builder.Configuration.GetConnectionString("DefaultConnection")
                 )
             );
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+            builder.Services.AddScoped<IBookRepository, BookRepository>();
+            builder.Services.AddScoped<IBorrowingTransaction, BorrowingTransactionRepository>();
+
+
 
             var app = builder.Build();
 
@@ -28,15 +41,15 @@ namespace LibraryManagementSystem
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseAuthorization();
 
-            app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
-                .WithStaticAssets();
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }
