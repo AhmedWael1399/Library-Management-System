@@ -4,6 +4,7 @@ using LibraryManagementSystem.DAL.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagementSystem.DAL.Migrations
 {
     [DbContext(typeof(LibraryManagementSystemDbContext))]
-    partial class LibraryManagementSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250513010429_UpdateEmailLengthAndSeedData1")]
+    partial class UpdateEmailLengthAndSeedData1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,26 +110,6 @@ namespace LibraryManagementSystem.DAL.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Books");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AuthorId = 1,
-                            Description = "A thrilling mystery novel.",
-                            Genre = 2,
-                            IsBorrowed = true,
-                            Title = "The Great Mystery"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AuthorId = 2,
-                            Description = "Exploring the future of humanity.",
-                            Genre = 5,
-                            IsBorrowed = false,
-                            Title = "The Future World"
-                        });
                 });
 
             modelBuilder.Entity("LibraryManagementSystem.DAL.Models.BorrowingTransaction", b =>
@@ -152,14 +135,6 @@ namespace LibraryManagementSystem.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("BorrowingTransactions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BookId = 1,
-                            BorrowedDate = new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("LibraryManagementSystem.DAL.Models.Book", b =>

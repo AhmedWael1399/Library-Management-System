@@ -11,7 +11,7 @@ namespace LibraryManagementSystem.DAL.Models
         public string FullName { get; set; }  
 
         [Required]
-        [MaxLength(20)]
+        [MaxLength(100)]
         public string Email { get; set; }    
 
         [MaxLength(20)]
