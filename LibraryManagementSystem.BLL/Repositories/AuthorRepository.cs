@@ -1,5 +1,7 @@
 ﻿using LibraryManagementSystem.BLL.Interfaces;
+using LibraryManagementSystem.DAL.Contexts;
 using LibraryManagementSystem.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,45 +10,19 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.BLL.Repositories
 {
-    public class AuthorRepository : IAuthorRepository
+    public class AuthorRepository : GenericRepository<Author>, IAuthorRepository
     {
-        private readonly IGenericRepository<Author> _authorRepository;
-
-        public AuthorRepository(IGenericRepository<Author> authorRepository)
+        private readonly LibraryManagementSystemDbContext _dbContext;
+        public AuthorRepository(LibraryManagementSystemDbContext dbContext) : base(dbContext) 
         {
-            _authorRepository = authorRepository;
+            _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Author>> GetAllAuthorsAsync()
+        public async Task<Author?> GetAuthorWithBooksAsync(int id)
         {
-            return await _authorRepository.GetAllAsync();
+            return await _dbContext.Authors
+                .Include(a => a.Books)
+                .FirstOrDefaultAsync(a => a.Id == id);
         }
-
-        public async Task<Author?> GetAuthorByIdAsync(int id)
-        {
-            return await _authorRepository.GetByIdAsync(id);
-        }
-
-        public async Task<bool> AddAuthorAsync(Author author)
-        {
-            await _authorRepository.AddAsync(author);
-            return await _authorRepository.SaveChangesAsync();
-        }
-
-        public async Task<bool> UpdateAuthorAsync(Author author)
-        {
-            _authorRepository.Update(author);
-            return await _authorRepository.SaveChangesAsync();
-        }
-
-        public async Task<bool> DeleteAuthorAsync(int id)
-        {
-            var author = await _authorRepository.GetByIdAsync(id);
-            if (author == null) return false;
-
-            _authorRepository.Remove(author);
-            return await _authorRepository.SaveChangesAsync();
-        }
-
     }
 }

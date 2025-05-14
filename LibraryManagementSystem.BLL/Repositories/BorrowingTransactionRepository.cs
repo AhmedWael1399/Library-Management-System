@@ -1,5 +1,7 @@
 ﻿using LibraryManagementSystem.BLL.Interfaces;
+using LibraryManagementSystem.DAL.Contexts;
 using LibraryManagementSystem.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,54 +10,19 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.BLL.Repositories
 {
-    public class BorrowingTransactionRepository : IBorrowingTransaction
+    public class BorrowingTransactionRepository : GenericRepository<BorrowingTransaction>, IBorrowingTransactionRepository
     {
-        private readonly IGenericRepository<BorrowingTransaction> _borrowingTransactionRepository;
-        private readonly IGenericRepository<Book> _bookRepository;
+        private readonly LibraryManagementSystemDbContext _dbContext;
 
-        public BorrowingTransactionRepository(IGenericRepository<BorrowingTransaction> borrowingTransactionRepository, IGenericRepository<Book> bookRepo)
+        public BorrowingTransactionRepository(LibraryManagementSystemDbContext dbContext) : base(dbContext)
         {
-            _borrowingTransactionRepository = borrowingTransactionRepository;
-            _bookRepository = bookRepo;
+            _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<BorrowingTransaction>> GetAllTransactionsAsync()
+        public async Task<BorrowingTransaction?> GetActiveBorrowByBookIdAsync(int bookId)
         {
-            return await _borrowingTransactionRepository.GetAllAsync();
-        }
-
-        public async Task<BorrowingTransaction?> GetTransactionByIdAsync(int id)
-        {
-            return await _borrowingTransactionRepository.GetByIdAsync(id);
-        }
-
-        public async Task<bool> BorrowBookAsync(BorrowingTransaction transaction)
-        {
-            var book = await _bookRepository.GetByIdAsync(transaction.BookId);
-            if (book == null || book.IsBorrowed) return false;
-
-            book.IsBorrowed = true;
-            await _borrowingTransactionRepository.AddAsync(transaction);
-            _bookRepository.Update(book);
-
-            return await _borrowingTransactionRepository.SaveChangesAsync();
-        }
-
-        public async Task<bool> ReturnBookAsync(int bookId)
-        {
-            var book = await _bookRepository.GetByIdAsync(bookId);
-            if (book == null || !book.IsBorrowed) return false;
-
-            var transaction = (await _borrowingTransactionRepository.FindAsync(t => t.BookId == bookId && t.ReturnedDate == null)).FirstOrDefault();
-            if (transaction == null) return false;
-
-            transaction.ReturnedDate = DateTime.Now;
-            book.IsBorrowed = false;
-
-            _borrowingTransactionRepository.Update(transaction);
-            _bookRepository.Update(book);
-
-            return await _borrowingTransactionRepository.SaveChangesAsync();
+            return await _dbContext.BorrowingTransactions
+            .FirstOrDefaultAsync(t => t.BookId == bookId && t.ReturnedDate == null);
         }
     }
 }

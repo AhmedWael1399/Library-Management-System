@@ -26,15 +26,15 @@ namespace LibraryManagementSystem.BLL.Repositories
             await _dbSet.AddAsync(item);
         }
 
-        public async Task AddRangeAsync(IEnumerable<T> items)
-        {
-            await _dbSet.AddRangeAsync(items);
-        }
+        //public async Task AddRangeAsync(IEnumerable<T> items)
+        //{
+        //    await _dbSet.AddRangeAsync(items);
+        //}
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
-        {
-            return await _dbSet.Where(predicate).ToListAsync();
-        }
+        //public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        //{
+        //    return await _dbSet.Where(predicate).ToListAsync();
+        //}
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
@@ -51,10 +51,10 @@ namespace LibraryManagementSystem.BLL.Repositories
             _dbSet.Remove(item);
         }
 
-        public void RemoveRange(IEnumerable<T> items)
-        {
-            _dbSet.RemoveRange(items);
-        }
+        //public void RemoveRange(IEnumerable<T> items)
+        //{
+        //    _dbSet.RemoveRange(items);
+        //}
 
         public async Task<bool> SaveChangesAsync()
         {

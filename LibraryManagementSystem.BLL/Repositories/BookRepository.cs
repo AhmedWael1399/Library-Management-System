@@ -21,18 +21,12 @@ namespace LibraryManagementSystem.BLL.Repositories
 
         public async Task<IEnumerable<Book>> GetAvailableBooksAsync()
         {
-            return await _dbContext.Books
-                .Where(b => !b.IsBorrowed)
-                .Include(b => b.Author)
-                .ToListAsync();
+           return await _dbContext.Books.Where(b => !b.IsBorrowed).ToListAsync();
         }
 
         public async Task<IEnumerable<Book>> GetBorrowedBooksAsync()
         {
-            return await _dbContext.Books
-               .Where(b => b.IsBorrowed)
-               .Include(b => b.Author)
-               .ToListAsync();
+            return await _dbContext.Books.Where(b => b.IsBorrowed).ToListAsync();
         }
     }
 }

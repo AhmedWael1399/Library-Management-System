@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.BLL.Interfaces
 {
-    public interface IBookRepository 
+    public interface IBookRepository : IGenericRepository<Book>
     {
         Task<IEnumerable<Book>> GetAvailableBooksAsync();
         Task<IEnumerable<Book>> GetBorrowedBooksAsync();

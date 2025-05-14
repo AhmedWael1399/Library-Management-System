@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.BLL.Interfaces
 {
-    public interface IBorrowingTransaction 
+    public interface IBorrowingTransactionService 
     {
         Task<IEnumerable<BorrowingTransaction>> GetAllTransactionsAsync();
         Task<BorrowingTransaction?> GetTransactionByIdAsync(int id);

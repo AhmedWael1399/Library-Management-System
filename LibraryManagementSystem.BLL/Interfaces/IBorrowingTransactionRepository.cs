@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.BLL.Interfaces
 {
-    public interface IAuthorRepository : IGenericRepository<Author>
+    public interface IBorrowingTransactionRepository : IGenericRepository<BorrowingTransaction>
     {
-        Task<Author?> GetAuthorWithBooksAsync(int id);
+        Task<BorrowingTransaction?> GetActiveBorrowByBookIdAsync(int bookId);
     }
 }
