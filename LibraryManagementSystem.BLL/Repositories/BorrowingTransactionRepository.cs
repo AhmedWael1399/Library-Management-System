@@ -19,6 +19,13 @@ namespace LibraryManagementSystem.BLL.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task<IEnumerable<BorrowingTransaction>> GetAllWithBooksAsync()
+        {
+            return await _dbContext.BorrowingTransactions
+                .Include(t => t.Book)
+                .ToListAsync();
+        }
+
         public async Task<BorrowingTransaction?> GetActiveBorrowByBookIdAsync(int bookId)
         {
             return await _dbContext.BorrowingTransactions

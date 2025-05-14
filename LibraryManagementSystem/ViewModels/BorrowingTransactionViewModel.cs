@@ -11,6 +11,7 @@ namespace LibraryManagementSystem.ViewModels
         public int BookId { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
         public DateTime BorrowedDate { get; set; }
 
         public DateTime? ReturnedDate { get; set; }

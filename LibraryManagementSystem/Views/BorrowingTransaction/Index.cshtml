@@ -1,0 +1,45 @@
+﻿@model IEnumerable<LibraryManagementSystem.DAL.Models.BorrowingTransaction>
+
+<h2>Borrowing Transactions</h2>
+
+<a asp-action="BorrowBook" class="btn btn-primary">New Borrow</a>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Book</th>
+            <th>Borrowed Date</th>
+            <th>Returned Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in Model)
+        {
+            <tr>
+                <td>@transaction.Book?.Title</td>
+                <td>@transaction.BorrowedDate.ToShortDateString()</td>
+                <td>@(transaction.ReturnedDate?.ToShortDateString() ?? "-")</td>
+                <td>
+                    @(transaction.ReturnedDate == null ? "Borrowed" : "Returned")
+                </td>
+                <td>
+                    @if (transaction.ReturnedDate == null)
+                    {
+                        <form asp-action="ReturnBook" method="post">
+                            <input type="hidden" name="bookId" value="@transaction.BookId" />
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                Return
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Returned</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

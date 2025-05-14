@@ -9,6 +9,7 @@ namespace LibraryManagementSystem.BLL.Interfaces
 {
     public interface IBorrowingTransactionRepository : IGenericRepository<BorrowingTransaction>
     {
+        Task<IEnumerable<BorrowingTransaction>> GetAllWithBooksAsync();
         Task<BorrowingTransaction?> GetActiveBorrowByBookIdAsync(int bookId);
     }
 }

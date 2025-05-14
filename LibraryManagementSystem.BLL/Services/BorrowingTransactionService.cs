@@ -21,7 +21,7 @@ namespace LibraryManagementSystem.BLL.Services
 
         public async Task<IEnumerable<BorrowingTransaction>> GetAllTransactionsAsync()
         {
-            return await _borrowingTransactionRepository.GetAllAsync();
+            return await _borrowingTransactionRepository.GetAllWithBooksAsync();
         }
 
         public async Task<BorrowingTransaction?> GetTransactionByIdAsync(int id)

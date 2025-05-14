@@ -1,0 +1,56 @@
+﻿@model LibraryManagementSystem.ViewModels.BorrowingTransactionViewModel
+@{
+    var books = ViewBag.AvailableBooks as IEnumerable<LibraryManagementSystem.DAL.Models.Book>;
+}
+
+<h2>Borrow a Book</h2>
+
+<form asp-action="BorrowBook" method="post">
+    <div class="form-group">
+        <label asp-for="BookId">Select Book</label>
+        <select asp-for="BookId" class="form-control" id="bookDropdown">
+            <option value="">-- Select Book --</option>
+            @foreach (var book in books)
+            {
+                <option value="@book.Id">@book.Title</option>
+            }
+        </select>
+        <span asp-validation-for="BookId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BorrowedDate"></label>
+        <input asp-for="BorrowedDate" type="date" class="form-control" />
+        <span asp-validation-for="BorrowedDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Availability:</label>
+        <span id="availabilityStatus" class="font-weight-bold text-info"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Borrow</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $('#bookDropdown').on('change', function () {
+            var bookId = $(this).val();
+            var status = $("#availabilityStatus");
+
+            if (!bookId) {
+                status.text('');
+                return;
+            }
+
+            $.get('/api/Books/CheckAvailability/' + bookId, function (isAvailable) {
+                if (isAvailable)
+                    status.text("Available").removeClass("text-danger").addClass("text-success");
+                else
+                    status.text("Already Borrowed").removeClass("text-success").addClass("text-danger");
+            });
+        });
+    </script>
+}

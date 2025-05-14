@@ -16,6 +16,13 @@ namespace LibraryManagementSystem.Controllers
             _bookService = bookService;
         }
 
+
+        public async Task<IActionResult> Index()
+        {
+            var transactions = await _borrowingTransactionService.GetAllTransactionsAsync();
+            return View(transactions);
+        }
+
         public async Task<IActionResult> BorrowBook()
         {
             ViewBag.AvailableBooks = await _bookService.GetAvailableAsync();
@@ -23,11 +30,16 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> BorrowBorrow(BorrowingTransactionViewModel vm)
+        public async Task<IActionResult> BorrowBook(BorrowingTransactionViewModel vm)
         {
             if (!ModelState.IsValid)
             {
                 ViewBag.AvailableBooks = await _bookService.GetAvailableAsync();
+                vm = new BorrowingTransactionViewModel
+                {
+                    BorrowedDate = DateTime.Today
+                };
+
                 return View(vm);
             }
 
@@ -49,7 +61,7 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Return(int bookId)
+        public async Task<IActionResult> ReturnBook(int bookId)
         {
             var success = await _borrowingTransactionService.ReturnBookAsync(bookId);
             if (!success)
