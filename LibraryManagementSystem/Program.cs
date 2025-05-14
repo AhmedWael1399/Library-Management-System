@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using LibraryManagementSystem.BLL.Interfaces;
 using LibraryManagementSystem.BLL.Repositories;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using LibraryManagementSystem.BLL.Services;
 
 
 namespace LibraryManagementSystem
@@ -23,10 +24,16 @@ namespace LibraryManagementSystem
                     builder.Configuration.GetConnectionString("DefaultConnection")
                 )
             );
+
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            
             builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
             builder.Services.AddScoped<IBookRepository, BookRepository>();
-            builder.Services.AddScoped<IBorrowingTransaction, BorrowingTransactionRepository>();
+            builder.Services.AddScoped<IBorrowingTransactionRepository, BorrowingTransactionRepository>();
+
+            builder.Services.AddScoped<IAuthorService, AuthorService>();
+            builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<IBorrowingTransactionService, BorrowingTransactionService>();
 
 
 

@@ -46,7 +46,7 @@ namespace LibraryManagementSystem.BLL.Services
             var book = await _bookRepository.GetByIdAsync(bookId);
             if (book == null || !book.IsBorrowed) return false;
 
-            var transaction = (await _borrowingTransactionRepository.FindAsync(t => t.BookId == bookId && t.ReturnedDate == null)).FirstOrDefault();
+            var transaction = await _borrowingTransactionRepository.GetActiveBorrowByBookIdAsync(bookId);
             if (transaction == null) return false;
 
             transaction.ReturnedDate = DateTime.Now;
