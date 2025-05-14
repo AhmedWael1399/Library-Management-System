@@ -19,6 +19,7 @@ namespace LibraryManagementSystem.BLL.Interfaces
         Task<bool> DeleteBookAsync(int id);
         Task<IEnumerable<BookStatusDto>> GetBookStatusReportAsync();
         Task<PaginatedList<Book>> GetPaginatedBooksAsync(int pageIndex, int pageSize);
+        Task<PaginatedList<BookStatusDto>> GetBookStatusPaginatedAsync(int pageIndex, int pageSize);
 
 
     }

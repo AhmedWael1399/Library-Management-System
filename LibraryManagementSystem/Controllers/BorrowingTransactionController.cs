@@ -1,4 +1,6 @@
-﻿using LibraryManagementSystem.BLL.Interfaces;
+﻿using LibraryManagementSystem.BLL.DTOs;
+using LibraryManagementSystem.BLL.Helpers;
+using LibraryManagementSystem.BLL.Interfaces;
 using LibraryManagementSystem.DAL.Models;
 using LibraryManagementSystem.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -71,20 +73,27 @@ namespace LibraryManagementSystem.Controllers
             return RedirectToAction("Index", "Book");
         }
 
-        public async Task<IActionResult> BookStatusReport(string status, DateTime? from, DateTime? to, int page = 1)
+        public async Task<IActionResult> BookStatusReport(string status, DateTime? borrowDate, DateTime? returnDate, int page = 1)
         {
-            var dtos = await _bookService.GetBookStatusReportAsync();
+            var dtos = await _bookService.GetBookStatusReportAsync(); 
 
             if (!string.IsNullOrEmpty(status))
                 dtos = dtos.Where(b => b.Status.Equals(status, StringComparison.OrdinalIgnoreCase));
 
-            if (from.HasValue)
-                dtos = dtos.Where(b => b.BorrowedDate >= from.Value);
+            if (borrowDate.HasValue)
+                dtos = dtos.Where(b => b.BorrowedDate.HasValue && b.BorrowedDate.Value.Date >= borrowDate.Value.Date);
 
-            if (to.HasValue)
-                dtos = dtos.Where(b => b.ReturnedDate <= to.Value);
+            if (returnDate.HasValue)
+                dtos = dtos.Where(b => b.ReturnedDate.HasValue && b.ReturnedDate.Value.Date <= returnDate.Value.Date);
 
-            var viewModels = dtos.Select(dto => new BookStatusViewModel
+            int pageSize = 5;
+            var total = dtos.Count();
+            var pagedDtos = dtos
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var viewModels = pagedDtos.Select(dto => new BookStatusViewModel
             {
                 BookId = dto.BookId,
                 Title = dto.Title,
@@ -92,14 +101,15 @@ namespace LibraryManagementSystem.Controllers
                 Status = dto.Status,
                 BorrowedDate = dto.BorrowedDate,
                 ReturnedDate = dto.ReturnedDate
-            });
+            }).ToList();
 
-            int pageSize = 5;
-            var paged = viewModels.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-            ViewBag.Page = page;
-            ViewBag.TotalPages = (int)Math.Ceiling(viewModels.Count() / (double)pageSize);
+            var paginatedVM = new PaginatedList<BookStatusViewModel>(viewModels, total, page, pageSize);
 
-            return View(paged);
+            ViewBag.Status = status;
+            ViewBag.BorrowDate = borrowDate?.ToString("yyyy-MM-dd");
+            ViewBag.ReturnDate = returnDate?.ToString("yyyy-MM-dd");
+
+            return View(paginatedVM);
         }
 
 

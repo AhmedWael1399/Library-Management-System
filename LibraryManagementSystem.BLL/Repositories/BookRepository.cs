@@ -1,4 +1,5 @@
-﻿using LibraryManagementSystem.BLL.Helpers;
+﻿using LibraryManagementSystem.BLL.DTOs;
+using LibraryManagementSystem.BLL.Helpers;
 using LibraryManagementSystem.BLL.Interfaces;
 using LibraryManagementSystem.DAL.Contexts;
 using LibraryManagementSystem.DAL.Models;
@@ -50,6 +51,42 @@ namespace LibraryManagementSystem.BLL.Repositories
             return await PaginatedList<Book>.CreateAsync(
                 _dbContext.Books.Include(b => b.Author).AsNoTracking(), pageIndex, pageSize);
         }
+
+        public async Task<IEnumerable<BookStatusDto>> GetBookStatusDTOsAsync()
+        {
+            return await _dbContext.Books
+                .Include(b => b.Author)
+                .Include(b => b.BorrowingTransaction)
+                .Select(b => new BookStatusDto
+                {
+                    BookId = b.Id,
+                    Title = b.Title,
+                    AuthorName = b.Author.FullName,
+                    Status = b.IsBorrowed ? "Borrowed" : "Available",
+                    BorrowedDate = b.BorrowingTransaction != null ? b.BorrowingTransaction.BorrowedDate : null,
+                    ReturnedDate = b.BorrowingTransaction != null ? b.BorrowingTransaction.ReturnedDate : null
+                })
+                .ToListAsync();
+        }
+
+        public async Task<PaginatedList<BookStatusDto>> GetBookStatusPaginatedAsync(int pageIndex, int pageSize)
+        {
+            var source = _dbContext.Books
+                .Include(b => b.Author)
+                .Include(b => b.BorrowingTransaction)
+                .Select(b => new BookStatusDto
+                {
+                    BookId = b.Id,
+                    Title = b.Title,
+                    AuthorName = b.Author.FullName,
+                    Status = b.IsBorrowed ? "Borrowed" : "Available",
+                    BorrowedDate = b.BorrowingTransaction!.BorrowedDate,
+                    ReturnedDate = b.BorrowingTransaction!.ReturnedDate
+                });
+
+            return await PaginatedList<BookStatusDto>.CreateAsync(source, pageIndex, pageSize); 
+        }
+
 
     }
 }

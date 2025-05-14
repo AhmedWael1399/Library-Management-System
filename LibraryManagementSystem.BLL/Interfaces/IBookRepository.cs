@@ -1,4 +1,5 @@
-﻿using LibraryManagementSystem.BLL.Helpers;
+﻿using LibraryManagementSystem.BLL.DTOs;
+using LibraryManagementSystem.BLL.Helpers;
 using LibraryManagementSystem.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,10 @@ namespace LibraryManagementSystem.BLL.Interfaces
         Task<IEnumerable<Book>> GetBorrowedBooksAsync();
         Task<IEnumerable<Book>> GetBooksWithAuthorAndTransactionAsync();
         Task<PaginatedList<Book>> GetPaginatedAsync(int pageIndex, int pageSize);
+        Task<IEnumerable<BookStatusDto>> GetBookStatusDTOsAsync();
+        Task<PaginatedList<BookStatusDto>> GetBookStatusPaginatedAsync(int pageIndex, int pageSize);
+
+
 
 
     }

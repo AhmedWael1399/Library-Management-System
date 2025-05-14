@@ -62,22 +62,18 @@ namespace LibraryManagementSystem.BLL.Services
 
         public async Task<IEnumerable<BookStatusDto>> GetBookStatusReportAsync()
         {
-            var books = await _bookRepository.GetBooksWithAuthorAndTransactionAsync();
-
-            return books.Select(b => new BookStatusDto
-            {
-                BookId = b.Id,
-                Title = b.Title,
-                AuthorName = b.Author.FullName,
-                Status = b.IsBorrowed ? "Borrowed" : "Available",
-                BorrowedDate = b.BorrowingTransaction?.BorrowedDate,
-                ReturnedDate = b.BorrowingTransaction?.ReturnedDate
-            });
+            return await _bookRepository.GetBookStatusDTOsAsync();
         }
+
         public async Task<PaginatedList<Book>> GetPaginatedBooksAsync(int pageIndex, int pageSize)
         {
             return await _bookRepository.GetPaginatedAsync(pageIndex, pageSize);
         }
+        public async Task<PaginatedList<BookStatusDto>> GetBookStatusPaginatedAsync(int pageIndex, int pageSize)
+        {
+            return await _bookRepository.GetBookStatusPaginatedAsync(pageIndex, pageSize);
+        }
+
 
     }
 }

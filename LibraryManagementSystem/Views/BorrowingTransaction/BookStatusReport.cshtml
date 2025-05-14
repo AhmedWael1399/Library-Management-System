@@ -1,18 +1,32 @@
-﻿@model IEnumerable<LibraryManagementSystem.ViewModels.BookStatusViewModel>
+﻿@using LibraryManagementSystem.BLL.Helpers
+@model PaginatedList<LibraryManagementSystem.ViewModels.BookStatusViewModel>
 
-<form method="get">
-    <select name="status" class="form-control d-inline w-auto">
-        <option value="">-- Status --</option>
-        <option value="Available">Available</option>
-        <option value="Borrowed">Borrowed</option>
-    </select>
+<h2>Book Status Report</h2>
 
-    <input type="date" name="from" class="form-control d-inline w-auto" />
-    <input type="date" name="to" class="form-control d-inline w-auto" />
-    <button type="submit" class="btn btn-info">Filter</button>
+<form method="get" class="mb-3 row g-3 align-items-center">
+    <div class="col-auto">
+        <select name="status" class="form-control">
+            <option value="">-- Status --</option>
+            <option value="Available" selected="@(ViewBag.Status == "Available")">Available</option>
+            <option value="Borrowed" selected="@(ViewBag.Status == "Borrowed")">Borrowed</option>
+        </select>
+    </div>
+
+    <div class="col-auto">
+        <input type="date" name="borrowDate" value="@ViewBag.BorrowDate" class="form-control" placeholder="Borrowed After" />
+    </div>
+
+    <div class="col-auto">
+        <input type="date" name="returnDate" value="@ViewBag.ReturnDate" class="form-control" placeholder="Returned Before" />
+    </div>
+
+    <div class="col-auto">
+        <button type="submit" class="btn btn-info">Filter</button>
+    </div>
 </form>
 
-<table class="table table-bordered mt-3">
+
+<table class="table table-bordered">
     <thead>
         <tr>
             <th>Title</th>
@@ -36,11 +50,27 @@
     </tbody>
 </table>
 
-<!-- Pagination Controls -->
-<div class="mt-2">
-    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+<div class="d-flex justify-content-center mt-3">
+    @if (Model.HasPreviousPage)
     {
-        <a class="btn btn-sm @(ViewBag.Page == i ? "btn-primary" : "btn-outline-primary")"
-           asp-route-page="@i">@i</a>
+        <a asp-action="BookStatusReport"
+           asp-route-page="@(Model.PageIndex - 1)"
+           asp-route-status="@ViewBag.Status"
+           asp-route-borrowDate="@ViewBag.BorrowDate"
+           asp-route-returnDate="@ViewBag.ReturnDate"
+           class="btn btn-sm btn-outline-primary">Previous</a>
+    }
+
+    <span class="mx-2">Page @Model.PageIndex of @Model.TotalPages</span>
+
+    @if (Model.HasNextPage)
+    {
+        <a asp-action="BookStatusReport"
+           asp-route-page="@(Model.PageIndex + 1)"
+           asp-route-status="@ViewBag.Status"
+           asp-route-borrowDate="@ViewBag.BorrowDate"
+           asp-route-returnDate="@ViewBag.ReturnDate"
+           class="btn btn-sm btn-outline-primary">Next</a>
     }
 </div>
+
