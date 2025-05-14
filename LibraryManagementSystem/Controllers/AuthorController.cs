@@ -20,7 +20,10 @@ namespace LibraryManagementSystem.Controllers
             return View(authors);
         }
 
-        public IActionResult Create() => View();
+        public IActionResult CreateAuthor()
+        {
+            return View(new AuthorViewModel()); 
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateAuthor(AuthorViewModel vm)

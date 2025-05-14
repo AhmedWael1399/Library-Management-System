@@ -1,0 +1,34 @@
+﻿@model IEnumerable<LibraryManagementSystem.DAL.Models.Author>
+
+<h2>Authors</h2>
+<a asp-action="CreateAuthor" class="btn btn-primary">Add New Author</a>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Website</th>
+            <th>Bio</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var author in Model)
+        {
+            <tr>
+                <td>@author.FullName</td>
+                <td>@author.Email</td>
+                <td>@author.Website</td>
+                <td>@author.Bio</td>
+                <td>
+                    <a asp-action="EditAuthor" asp-route-id="@author.Id"
+                       class="btn btn-sm btn-warning">Edit</a>
+
+                    <a asp-action="DeleteAuthor" asp-route-id="@author.Id"
+                       class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

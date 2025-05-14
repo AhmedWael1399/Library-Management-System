@@ -14,7 +14,7 @@ namespace LibraryManagementSystem.DAL.Models
         [MaxLength(100)]
         public string Email { get; set; }    
 
-        [MaxLength(20)]
+        [MaxLength(200)]
         public string? Website { get; set; }
 
         [MaxLength(100)]
