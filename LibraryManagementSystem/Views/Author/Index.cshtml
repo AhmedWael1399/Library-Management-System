@@ -3,6 +3,12 @@
 <h2>Authors</h2>
 <a asp-action="CreateAuthor" class="btn btn-primary">Add New Author</a>
 
+
+<form method="get" asp-controller="Author" asp-action="Index">
+    <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" placeholder="Search..." />
+    <button type="submit" class="btn btn-info btn-sm">Search</button>
+</form>
+
 <table class="table table-bordered mt-3">
     <thead>
         <tr>
@@ -32,3 +38,13 @@
         }
     </tbody>
 </table>
+
+<div class="pagination mt-3">
+    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+    {
+        <a asp-action="Index" asp-route-page="@i" asp-route-searchTerm="@ViewBag.SearchTerm"
+           class="btn @(i == ViewBag.Page ? "btn-primary" : "btn-outline-primary") btn-sm">
+            @i
+        </a>
+    }
+</div>

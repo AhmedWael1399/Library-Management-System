@@ -1,0 +1,46 @@
+﻿@model IEnumerable<LibraryManagementSystem.ViewModels.BookStatusViewModel>
+
+<form method="get">
+    <select name="status" class="form-control d-inline w-auto">
+        <option value="">-- Status --</option>
+        <option value="Available">Available</option>
+        <option value="Borrowed">Borrowed</option>
+    </select>
+
+    <input type="date" name="from" class="form-control d-inline w-auto" />
+    <input type="date" name="to" class="form-control d-inline w-auto" />
+    <button type="submit" class="btn btn-info">Filter</button>
+</form>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Status</th>
+            <th>Borrowed Date</th>
+            <th>Returned Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr class="@(book.Status == "Borrowed" ? "table-warning" : "table-success")">
+                <td>@book.Title</td>
+                <td>@book.AuthorName</td>
+                <td>@book.Status</td>
+                <td>@(book.BorrowedDate?.ToShortDateString() ?? "-")</td>
+                <td>@(book.ReturnedDate?.ToShortDateString() ?? "-")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Pagination Controls -->
+<div class="mt-2">
+    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+    {
+        <a class="btn btn-sm @(ViewBag.Page == i ? "btn-primary" : "btn-outline-primary")"
+           asp-route-page="@i">@i</a>
+    }
+</div>

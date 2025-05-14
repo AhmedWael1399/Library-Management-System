@@ -11,5 +11,6 @@ namespace LibraryManagementSystem.BLL.Interfaces
     {
         Task<IEnumerable<BorrowingTransaction>> GetAllWithBooksAsync();
         Task<BorrowingTransaction?> GetActiveBorrowByBookIdAsync(int bookId);
+
     }
 }

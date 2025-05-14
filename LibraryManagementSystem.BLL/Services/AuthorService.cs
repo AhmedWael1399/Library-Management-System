@@ -48,5 +48,11 @@ namespace LibraryManagementSystem.BLL.Services
             return await _authorRepository.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Author>> SearchAsync(string searchTerm)
+        {
+            return await _authorRepository.GetAllAsync(a =>
+                string.IsNullOrEmpty(searchTerm) || a.FullName.Contains(searchTerm));
+        }
+
     }
 }

@@ -1,5 +1,12 @@
 ﻿@model IEnumerable<LibraryManagementSystem.DAL.Models.BorrowingTransaction>
 
+@for (int i = 1; i <= ViewBag.TotalPages; i++)
+{
+    <a class="btn btn-sm @(ViewBag.Page == i ? "btn-primary" : "btn-outline-primary")"
+       asp-route-page="@i">@i</a>
+}
+
+
 <h2>Borrowing Transactions</h2>
 
 <a asp-action="BorrowBook" class="btn btn-primary">New Borrow</a>

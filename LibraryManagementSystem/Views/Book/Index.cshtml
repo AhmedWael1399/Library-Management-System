@@ -1,4 +1,12 @@
-﻿@model IEnumerable<LibraryManagementSystem.DAL.Models.Book>
+﻿@using LibraryManagementSystem.BLL.Helpers
+@model PaginatedList<LibraryManagementSystem.DAL.Models.Book>
+
+@for (int i = 1; i <= ViewBag.TotalPages; i++)
+{
+    <a class="btn btn-sm @(ViewBag.Page == i ? "btn-primary" : "btn-outline-primary")"
+       asp-route-page="@i">@i</a>
+}
+
 
 <h2>Books</h2>
 <a asp-action="CreateBook" class="btn btn-primary">Add Book</a>
@@ -8,6 +16,7 @@
         <tr>
             <th>Title</th>
             <th>Genre</th>
+            <th>Description</th>
             <th>Author</th>
             <th>Status</th>
             <th>Actions</th>
@@ -19,6 +28,7 @@
             <tr>
                 <td>@book.Title</td>
                 <td>@book.Genre</td>
+                <td>@book.Description</td>
                 <td>@book.Author.FullName</td>
                 <td>@(book.IsBorrowed ? "Borrowed" : "Available")</td>
                 <td>
@@ -29,3 +39,19 @@
         }
     </tbody>
 </table>
+
+<div class="d-flex justify-content-center mt-3">
+    @if (Model.HasPreviousPage)
+    {
+        <a asp-action="Index" asp-route-page="@(Model.PageIndex - 1)" class="btn btn-sm btn-outline-primary">Previous</a>
+    }
+
+    <span class="mx-2">Page @Model.PageIndex of @Model.TotalPages</span>
+
+    @if (Model.HasNextPage)
+    {
+        <a asp-action="Index" asp-route-page="@(Model.PageIndex + 1)" class="btn btn-sm btn-outline-primary">Next</a>
+    }
+</div>
+
+

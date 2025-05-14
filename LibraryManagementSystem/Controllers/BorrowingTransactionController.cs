@@ -69,5 +69,38 @@ namespace LibraryManagementSystem.Controllers
 
             return RedirectToAction("Index", "Book");
         }
+
+        public async Task<IActionResult> BookStatusReport(string status, DateTime? from, DateTime? to, int page = 1)
+        {
+            var dtos = await _bookService.GetBookStatusReportAsync();
+
+            if (!string.IsNullOrEmpty(status))
+                dtos = dtos.Where(b => b.Status.Equals(status, StringComparison.OrdinalIgnoreCase));
+
+            if (from.HasValue)
+                dtos = dtos.Where(b => b.BorrowedDate >= from.Value);
+
+            if (to.HasValue)
+                dtos = dtos.Where(b => b.ReturnedDate <= to.Value);
+
+            var viewModels = dtos.Select(dto => new BookStatusViewModel
+            {
+                BookId = dto.BookId,
+                Title = dto.Title,
+                AuthorName = dto.AuthorName,
+                Status = dto.Status,
+                BorrowedDate = dto.BorrowedDate,
+                ReturnedDate = dto.ReturnedDate
+            });
+
+            int pageSize = 5;
+            var paged = viewModels.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            ViewBag.Page = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(viewModels.Count() / (double)pageSize);
+
+            return View(paged);
+        }
+
+
     }
 }

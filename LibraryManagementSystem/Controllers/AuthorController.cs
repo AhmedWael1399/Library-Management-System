@@ -14,10 +14,19 @@ namespace LibraryManagementSystem.Controllers
             _authorService = authorService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, int page = 1, int pageSize = 5)
         {
-            var authors = await _authorService.GetAllAuthorsAsync();
-            return View(authors);
+            var all = await _authorService.SearchAsync(searchTerm ?? "");
+            var paginated = all
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.Page = page;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)all.Count() / pageSize);
+
+            return View(paginated);
         }
 
         public IActionResult CreateAuthor()

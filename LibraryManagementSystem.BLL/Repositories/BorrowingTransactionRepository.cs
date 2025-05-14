@@ -23,6 +23,7 @@ namespace LibraryManagementSystem.BLL.Repositories
         {
             return await _dbContext.BorrowingTransactions
                 .Include(t => t.Book)
+                .ThenInclude(b => b.Author)
                 .ToListAsync();
         }
 

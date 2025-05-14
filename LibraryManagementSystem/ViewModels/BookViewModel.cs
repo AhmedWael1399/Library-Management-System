@@ -14,7 +14,7 @@ namespace LibraryManagementSystem.ViewModels
         [Required]
         public int Genre { get; set; }  
 
-        [MaxLength(300)]
+        [MaxLength(100)]
         public string? Description { get; set; }
 
         [Required]

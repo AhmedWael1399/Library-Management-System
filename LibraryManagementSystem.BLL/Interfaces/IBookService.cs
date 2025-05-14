@@ -1,4 +1,6 @@
-﻿using LibraryManagementSystem.DAL.Models;
+﻿using LibraryManagementSystem.BLL.DTOs;
+using LibraryManagementSystem.BLL.Helpers;
+using LibraryManagementSystem.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +17,9 @@ namespace LibraryManagementSystem.BLL.Interfaces
         Task<bool> AddBookAsync(Book book);
         Task<bool> UpdateBookAsync(Book book);
         Task<bool> DeleteBookAsync(int id);
+        Task<IEnumerable<BookStatusDto>> GetBookStatusReportAsync();
+        Task<PaginatedList<Book>> GetPaginatedBooksAsync(int pageIndex, int pageSize);
+
+
     }
 }

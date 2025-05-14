@@ -1,4 +1,5 @@
-﻿using LibraryManagementSystem.BLL.Interfaces;
+﻿using LibraryManagementSystem.BLL.Helpers;
+using LibraryManagementSystem.BLL.Interfaces;
 using LibraryManagementSystem.DAL.Models;
 using LibraryManagementSystem.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +17,10 @@ namespace LibraryManagementSystem.Controllers
             _authorService = authorService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var books = await _bookService.GetAllBooksAsync();
-            return View(books);
+            var paginatedBooks = await _bookService.GetPaginatedBooksAsync(page, 5);
+            return View(paginatedBooks);
         }
 
         public async Task<IActionResult> CreateBook()
@@ -97,5 +98,23 @@ namespace LibraryManagementSystem.Controllers
             await _bookService.DeleteBookAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> BookStatusReport()
+        {
+            var dtos = await _bookService.GetBookStatusReportAsync();
+
+            var viewModels = dtos.Select(dto => new BookStatusViewModel
+            {
+                BookId = dto.BookId,
+                Title = dto.Title,
+                AuthorName = dto.AuthorName,
+                Status = dto.Status,
+                BorrowedDate = dto.BorrowedDate,
+                ReturnedDate = dto.ReturnedDate
+            });
+
+            return View(viewModels);
+        }
+
     }
 }

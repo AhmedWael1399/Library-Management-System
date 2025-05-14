@@ -14,5 +14,7 @@ namespace LibraryManagementSystem.BLL.Interfaces
         Task<bool> AddAuthorAsync(Author author);
         Task<bool> UpdateAuthorAsync(Author author);
         Task<bool> DeleteAuthorAsync(int id);
+
+        Task<IEnumerable<Author>> SearchAsync(string searchTerm);
     }
 }

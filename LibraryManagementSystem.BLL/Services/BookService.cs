@@ -1,4 +1,6 @@
-﻿using LibraryManagementSystem.BLL.Interfaces;
+﻿using LibraryManagementSystem.BLL.DTOs;
+using LibraryManagementSystem.BLL.Helpers;
+using LibraryManagementSystem.BLL.Interfaces;
 using LibraryManagementSystem.BLL.Repositories;
 using LibraryManagementSystem.DAL.Contexts;
 using LibraryManagementSystem.DAL.Models;
@@ -57,5 +59,25 @@ namespace LibraryManagementSystem.BLL.Services
             await _bookRepository.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IEnumerable<BookStatusDto>> GetBookStatusReportAsync()
+        {
+            var books = await _bookRepository.GetBooksWithAuthorAndTransactionAsync();
+
+            return books.Select(b => new BookStatusDto
+            {
+                BookId = b.Id,
+                Title = b.Title,
+                AuthorName = b.Author.FullName,
+                Status = b.IsBorrowed ? "Borrowed" : "Available",
+                BorrowedDate = b.BorrowingTransaction?.BorrowedDate,
+                ReturnedDate = b.BorrowingTransaction?.ReturnedDate
+            });
+        }
+        public async Task<PaginatedList<Book>> GetPaginatedBooksAsync(int pageIndex, int pageSize)
+        {
+            return await _bookRepository.GetPaginatedAsync(pageIndex, pageSize);
+        }
+
     }
 }
