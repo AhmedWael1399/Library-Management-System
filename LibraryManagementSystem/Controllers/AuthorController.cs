@@ -1,4 +1,5 @@
-﻿using LibraryManagementSystem.BLL.Interfaces;
+﻿using LibraryManagementSystem.BLL.Helpers;
+using LibraryManagementSystem.BLL.Interfaces;
 using LibraryManagementSystem.DAL.Models;
 using LibraryManagementSystem.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -14,20 +15,14 @@ namespace LibraryManagementSystem.Controllers
             _authorService = authorService;
         }
 
-        public async Task<IActionResult> Index(string searchTerm, int page = 1, int pageSize = 5)
+        public async Task<IActionResult> Index(string searchTerm, int page = 1)
         {
-            var all = await _authorService.SearchAsync(searchTerm ?? "");
-            var paginated = all
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+            var paginated = await _authorService.SearchPaginatedAsync(searchTerm ?? "", page, 5);
 
             ViewBag.SearchTerm = searchTerm;
-            ViewBag.Page = page;
-            ViewBag.TotalPages = (int)Math.Ceiling((double)all.Count() / pageSize);
-
             return View(paginated);
         }
+
 
         public IActionResult CreateAuthor()
         {

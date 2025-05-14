@@ -1,4 +1,5 @@
-﻿using LibraryManagementSystem.BLL.Interfaces;
+﻿using LibraryManagementSystem.BLL.Helpers;
+using LibraryManagementSystem.BLL.Interfaces;
 using LibraryManagementSystem.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -48,11 +49,11 @@ namespace LibraryManagementSystem.BLL.Services
             return await _authorRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Author>> SearchAsync(string searchTerm)
+        public async Task<PaginatedList<Author>> SearchPaginatedAsync(string searchTerm, int pageIndex, int pageSize)
         {
-            return await _authorRepository.GetAllAsync(a =>
-                string.IsNullOrEmpty(searchTerm) || a.FullName.Contains(searchTerm));
+            return await _authorRepository.SearchPaginatedAsync(searchTerm, pageIndex, pageSize);
         }
+
 
     }
 }

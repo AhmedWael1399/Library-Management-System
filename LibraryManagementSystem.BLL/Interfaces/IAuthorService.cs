@@ -1,4 +1,5 @@
-﻿using LibraryManagementSystem.DAL.Models;
+﻿using LibraryManagementSystem.BLL.Helpers;
+using LibraryManagementSystem.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,6 @@ namespace LibraryManagementSystem.BLL.Interfaces
         Task<bool> AddAuthorAsync(Author author);
         Task<bool> UpdateAuthorAsync(Author author);
         Task<bool> DeleteAuthorAsync(int id);
-
-        Task<IEnumerable<Author>> SearchAsync(string searchTerm);
+        Task<PaginatedList<Author>> SearchPaginatedAsync(string searchTerm, int pageIndex, int pageSize);
     }
 }

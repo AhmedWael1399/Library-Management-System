@@ -17,11 +17,12 @@ namespace LibraryManagementSystem.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var transactions = await _borrowingTransactionService.GetAllTransactionsAsync();
-            return View(transactions);
+            var pagedTransactions = await _borrowingTransactionService.GetPaginatedTransactionsAsync(page, 5);
+            return View(pagedTransactions);
         }
+
 
         public async Task<IActionResult> BorrowBook()
         {

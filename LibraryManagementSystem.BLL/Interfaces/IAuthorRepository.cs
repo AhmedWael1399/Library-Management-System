@@ -1,4 +1,5 @@
-﻿using LibraryManagementSystem.DAL.Models;
+﻿using LibraryManagementSystem.BLL.Helpers;
+using LibraryManagementSystem.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace LibraryManagementSystem.BLL.Interfaces
     public interface IAuthorRepository : IGenericRepository<Author>
     {
         Task<Author?> GetAuthorWithBooksAsync(int id);
+        Task<PaginatedList<Author>> SearchPaginatedAsync(string searchTerm, int pageIndex, int pageSize);
     }
 }

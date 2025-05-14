@@ -1,4 +1,5 @@
-﻿using LibraryManagementSystem.BLL.Interfaces;
+﻿using LibraryManagementSystem.BLL.Helpers;
+using LibraryManagementSystem.BLL.Interfaces;
 using LibraryManagementSystem.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -57,5 +58,11 @@ namespace LibraryManagementSystem.BLL.Services
 
             return await _borrowingTransactionRepository.SaveChangesAsync();
         }
+
+        public async Task<PaginatedList<BorrowingTransaction>> GetPaginatedTransactionsAsync(int pageIndex, int pageSize)
+        {
+            return await _borrowingTransactionRepository.GetPaginatedTransactionsAsync(pageIndex, pageSize);
+        }
+
     }
 }

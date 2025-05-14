@@ -1,13 +1,15 @@
-﻿@model IEnumerable<LibraryManagementSystem.DAL.Models.Author>
+﻿@using LibraryManagementSystem.BLL.Helpers
+@model PaginatedList<LibraryManagementSystem.DAL.Models.Author>
 
 <h2>Authors</h2>
 <a asp-action="CreateAuthor" class="btn btn-primary">Add New Author</a>
 
 
-<form method="get" asp-controller="Author" asp-action="Index">
-    <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" placeholder="Search..." />
-    <button type="submit" class="btn btn-info btn-sm">Search</button>
+<form method="get" class="mb-2">
+    <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" placeholder="Search by name..." class="form-control w-25 d-inline" />
+    <button type="submit" class="btn btn-sm btn-info">Search</button>
 </form>
+
 
 <table class="table table-bordered mt-3">
     <thead>
@@ -39,12 +41,18 @@
     </tbody>
 </table>
 
-<div class="pagination mt-3">
-    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+<div class="d-flex justify-content-center mt-3">
+    @if (Model.HasPreviousPage)
     {
-        <a asp-action="Index" asp-route-page="@i" asp-route-searchTerm="@ViewBag.SearchTerm"
-           class="btn @(i == ViewBag.Page ? "btn-primary" : "btn-outline-primary") btn-sm">
-            @i
-        </a>
+        <a asp-action="Index" asp-route-searchTerm="@ViewBag.SearchTerm" asp-route-page="@(Model.PageIndex - 1)"
+           class="btn btn-sm btn-outline-primary">Previous</a>
+    }
+
+    <span class="mx-2">Page @Model.PageIndex of @Model.TotalPages</span>
+
+    @if (Model.HasNextPage)
+    {
+        <a asp-action="Index" asp-route-searchTerm="@ViewBag.SearchTerm" asp-route-page="@(Model.PageIndex + 1)"
+           class="btn btn-sm btn-outline-primary">Next</a>
     }
 </div>

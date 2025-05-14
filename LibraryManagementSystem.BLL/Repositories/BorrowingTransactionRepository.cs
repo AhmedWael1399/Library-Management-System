@@ -1,4 +1,5 @@
-﻿using LibraryManagementSystem.BLL.Interfaces;
+﻿using LibraryManagementSystem.BLL.Helpers;
+using LibraryManagementSystem.BLL.Interfaces;
 using LibraryManagementSystem.DAL.Contexts;
 using LibraryManagementSystem.DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -32,5 +33,18 @@ namespace LibraryManagementSystem.BLL.Repositories
             return await _dbContext.BorrowingTransactions
             .FirstOrDefaultAsync(t => t.BookId == bookId && t.ReturnedDate == null);
         }
+
+        public async Task<PaginatedList<BorrowingTransaction>> GetPaginatedTransactionsAsync(int pageIndex, int pageSize)
+        {
+            return await PaginatedList<BorrowingTransaction>.CreateAsync(
+                _dbContext.BorrowingTransactions
+                    .Include(t => t.Book)
+                    .ThenInclude(b => b.Author)
+                    .AsNoTracking(),
+                pageIndex,
+                pageSize
+            );
+        }
+
     }
 }

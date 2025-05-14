@@ -1,4 +1,5 @@
-﻿using LibraryManagementSystem.BLL.Interfaces;
+﻿using LibraryManagementSystem.BLL.Helpers;
+using LibraryManagementSystem.BLL.Interfaces;
 using LibraryManagementSystem.DAL.Contexts;
 using LibraryManagementSystem.DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -24,5 +25,16 @@ namespace LibraryManagementSystem.BLL.Repositories
                 .Include(a => a.Books)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
+
+        public async Task<PaginatedList<Author>> SearchPaginatedAsync(string searchTerm, int pageIndex, int pageSize)
+        {
+            var query = _dbContext.Authors.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+                query = query.Where(a => a.FullName.Contains(searchTerm));
+
+            return await PaginatedList<Author>.CreateAsync(query.AsNoTracking(), pageIndex, pageSize);
+        }
+
     }
 }
