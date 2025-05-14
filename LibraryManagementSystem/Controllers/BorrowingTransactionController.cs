@@ -19,7 +19,7 @@ namespace LibraryManagementSystem.Controllers
         public async Task<IActionResult> BorrowBook()
         {
             ViewBag.AvailableBooks = await _bookService.GetAvailableAsync();
-            return View();
+            return View(new BorrowingTransactionViewModel());
         }
 
         [HttpPost]

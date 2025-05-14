@@ -25,7 +25,7 @@ namespace LibraryManagementSystem.Controllers
         public async Task<IActionResult> CreateBook()
         {
             ViewBag.Authors = await _authorService.GetAllAuthorsAsync();
-            return View();
+            return View(new BookViewModel());
         }
 
         [HttpPost]
