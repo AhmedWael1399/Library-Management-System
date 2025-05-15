@@ -12,16 +12,9 @@ namespace LibraryManagementSystem.BLL.Interfaces
         Task<IEnumerable<T>> GetAllAsync();
         Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
         Task<T?> GetByIdAsync(int id);
-        //Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
-
         Task AddAsync(T item);
-        //Task AddRangeAsync(IEnumerable<T> items);
-
         void Update(T item);
-
         void Remove(T item);
-        //void RemoveRange(IEnumerable<T> items);
-        
         Task<bool> SaveChangesAsync();
     }
 }
