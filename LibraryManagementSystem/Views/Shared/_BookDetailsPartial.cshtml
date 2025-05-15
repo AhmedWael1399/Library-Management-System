@@ -1,0 +1,15 @@
+﻿@model LibraryManagementSystem.ViewModels.BookStatusViewModel
+
+<div class="card mb-3 shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Title</h5>
+        <p class="card-text">
+            <strong>Author:</strong> @Model.AuthorName <br />
+            <strong>Status:</strong>
+            @await Html.PartialAsync("_BookStatusBadgePartial", Model.Status)
+            <br />
+            <strong>Borrowed:</strong> @(Model.BorrowedDate?.ToShortDateString() ?? "-")<br />
+            <strong>Returned:</strong> @(Model.ReturnedDate?.ToShortDateString() ?? "-")
+        </p>
+    </div>
+</div>

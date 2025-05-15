@@ -27,26 +27,16 @@
 
 
 <table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Status</th>
-            <th>Borrowed Date</th>
-            <th>Returned Date</th>
-        </tr>
-    </thead>
     <tbody>
-        @foreach (var book in Model)
-        {
-            <tr class="@(book.Status == "Borrowed" ? "table-warning" : "table-success")">
-                <td>@book.Title</td>
-                <td>@book.AuthorName</td>
-                <td>@book.Status</td>
-                <td>@(book.BorrowedDate?.ToShortDateString() ?? "-")</td>
-                <td>@(book.ReturnedDate?.ToShortDateString() ?? "-")</td>
-            </tr>
-        }
+       @foreach (var book in Model)
+{
+    <tr>
+        <td colspan="5">
+            @await Html.PartialAsync("_BookDetailsPartial", book)
+        </td>
+    </tr>
+}
+
     </tbody>
 </table>
 
