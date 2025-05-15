@@ -35,6 +35,7 @@ namespace LibraryManagementSystem.DAL.Models
 
         public bool IsBorrowed { get; set; }
 
-        public BorrowingTransaction? BorrowingTransaction { get; set; }
+        public ICollection<BorrowingTransaction> BorrowingTransactions { get; set; } = new List<BorrowingTransaction>(); 
+
     }
 }

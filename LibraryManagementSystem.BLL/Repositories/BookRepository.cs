@@ -42,7 +42,7 @@ namespace LibraryManagementSystem.BLL.Repositories
         {
             return await _dbContext.Books
                 .Include(b => b.Author)
-                .Include(b => b.BorrowingTransaction)
+                .Include(b => b.BorrowingTransactions)
                 .ToListAsync();
         }
 
@@ -54,38 +54,63 @@ namespace LibraryManagementSystem.BLL.Repositories
 
         public async Task<IEnumerable<BookStatusDto>> GetBookStatusDTOsAsync()
         {
-            return await _dbContext.Books
+            var books = await _dbContext.Books
                 .Include(b => b.Author)
-                .Include(b => b.BorrowingTransaction)
-                .Select(b => new BookStatusDto
+                .Include(b => b.BorrowingTransactions)
+                .AsNoTracking()
+                .ToListAsync();
+
+
+            var dtoList = books.Select(b =>
+            {
+                var latest = b.BorrowingTransactions
+                    .OrderByDescending(t => t.BorrowedDate)
+                    .FirstOrDefault();
+
+                return new BookStatusDto
                 {
                     BookId = b.Id,
                     Title = b.Title,
                     AuthorName = b.Author.FullName,
                     Status = b.IsBorrowed ? "Borrowed" : "Available",
-                    BorrowedDate = b.BorrowingTransaction != null ? b.BorrowingTransaction.BorrowedDate : null,
-                    ReturnedDate = b.BorrowingTransaction != null ? b.BorrowingTransaction.ReturnedDate : null
-                })
-                .ToListAsync();
+                    BorrowedDate = latest?.BorrowedDate,
+                    ReturnedDate = latest?.ReturnedDate
+                };
+            });
+
+            return dtoList;
         }
+
 
         public async Task<PaginatedList<BookStatusDto>> GetBookStatusPaginatedAsync(int pageIndex, int pageSize)
         {
-            var source = _dbContext.Books
+            var books = await _dbContext.Books
                 .Include(b => b.Author)
-                .Include(b => b.BorrowingTransaction)
-                .Select(b => new BookStatusDto
+                .Include(b => b.BorrowingTransactions)
+                .AsNoTracking()
+                .ToListAsync(); 
+
+ 
+            var dtoList = books.Select(b =>
+            {
+                var latest = b.BorrowingTransactions
+                    .OrderByDescending(t => t.BorrowedDate)
+                    .FirstOrDefault();
+
+                return new BookStatusDto
                 {
                     BookId = b.Id,
                     Title = b.Title,
                     AuthorName = b.Author.FullName,
                     Status = b.IsBorrowed ? "Borrowed" : "Available",
-                    BorrowedDate = b.BorrowingTransaction!.BorrowedDate,
-                    ReturnedDate = b.BorrowingTransaction!.ReturnedDate
-                });
+                    BorrowedDate = latest?.BorrowedDate,
+                    ReturnedDate = latest?.ReturnedDate
+                };
+            });
 
-            return await PaginatedList<BookStatusDto>.CreateAsync(source, pageIndex, pageSize); 
+            return await PaginatedList<BookStatusDto>.CreateAsync(dtoList, pageIndex, pageSize);
         }
+
 
 
     }

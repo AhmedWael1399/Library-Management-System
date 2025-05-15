@@ -60,7 +60,7 @@ namespace LibraryManagementSystem.Controllers
                 return View(vm);
             }
 
-            return RedirectToAction("Index", "Book");
+            return RedirectToAction("Index", "BorrowingTransaction");
         }
 
         [HttpPost]
@@ -70,7 +70,7 @@ namespace LibraryManagementSystem.Controllers
             if (!success)
                 return BadRequest("Invalid return attempt.");
 
-            return RedirectToAction("Index", "Book");
+            return RedirectToAction("Index", "BorrowingTransaction");
         }
 
         public async Task<IActionResult> BookStatusReport(string status, DateTime? borrowDate, DateTime? returnDate, int page = 1)

@@ -41,8 +41,9 @@ namespace LibraryManagementSystem.DAL.Contexts
 
             modelBuilder.Entity<BorrowingTransaction>()
                 .HasOne(bt => bt.Book)
-                .WithOne(b => b.BorrowingTransaction)
-                .HasForeignKey<BorrowingTransaction>(bt => bt.BookId);
+                .WithMany(b => b.BorrowingTransactions)
+                .HasForeignKey(bt => bt.BookId);
+
 
 
             modelBuilder.Entity<Author>().HasData(

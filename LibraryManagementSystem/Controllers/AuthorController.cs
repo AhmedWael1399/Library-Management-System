@@ -34,6 +34,13 @@ namespace LibraryManagementSystem.Controllers
         {
             if (!ModelState.IsValid) return View(vm);
 
+            var existing = await _authorService.GetAllAuthorsAsync();
+            if (existing.Any(a => a.FullName == vm.FullName))
+            {
+                ModelState.AddModelError("FullName", "This full name is already taken.");
+                return View(vm);
+            }
+
             var author = new Author
             {
                 FullName = vm.FullName,
